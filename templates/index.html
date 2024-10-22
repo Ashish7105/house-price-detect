@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>House Price Prediction</title>
+</head>
+<body>
+    <div class="container">
+        <h1>House Price Prediction</h1>
+        <form action="/predict" method="POST">
+            <label for="size">Size (sq ft):</label>
+            <input type="number" name="size" required>
+
+            <label for="bedrooms">Number of Bedrooms:</label>
+            <input type="number" name="bedrooms" required>
+
+            <label for="age">Age of House (years):</label>
+            <input type="number" name="age" required>
+
+            <button type="submit">Predict Price</button>
+        </form>
+    </div>
+</body>
+</html>
