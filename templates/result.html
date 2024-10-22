@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Prediction Result</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Predicted House Price</h1>
-        <p>The predicted price of the house is: <strong>${{ price | round(2) }}</strong></p>
-        <a href="/">Back to Home</a>
-    </div>
+    <h1>Predicted House Price</h1>
+    <p>The predicted price of the house is: <strong>${{ price | round(2) }}</strong></p>
+    <h2>Actual vs. Predicted Prices</h2>
+    <img src="data:image/png;base64,{{ plot_url }}" alt="Actual vs Predicted Graph">
+    <a href="/">Back to Home</a>
 </body>
 </html>

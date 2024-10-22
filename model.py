@@ -1,34 +1,54 @@
-import pandas as pd
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
 import joblib
+import matplotlib.pyplot as plt
+import io
+import base64
+import numpy as np
+from sklearn.model_selection import train_test_split
 
-# Create synthetic dataset
-data = {
-    'Size': [1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400],
-    'Bedrooms': [3, 3, 3, 4, 4, 4, 5, 5, 5, 6],
-    'Age': [10, 15, 20, 10, 5, 2, 3, 8, 15, 12],
-    'Price': [300000, 320000, 340000, 360000, 380000, 400000, 420000, 440000, 460000, 480000]
-}
+# Example synthetic dataset for demonstration purposes
+data = np.array([
+    [1800, 4, 10, 500000],
+    [2200, 5, 3, 750000],
+    [1600, 3, 15, 400000],
+    [3000, 6, 2, 900000],
+    [1000, 2, 20, 300000],
+    # Add more data as needed for better prediction
+])
 
-# Convert to DataFrame
-df = pd.DataFrame(data)
+# Features: Size, Bedrooms, Age
+X = data[:, :3]
+# Target: Price
+y = data[:, 3]
 
-# Prepare the data
-X = df[['Size', 'Bedrooms', 'Age']]
-y = df['Price']
-
-# Split the data
+# Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train the model
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-# Save the model
-joblib.dump(model, 'house_price_model.pkl')
+# Load the trained model (assuming you've already trained and saved it)
+model = joblib.load('house_price_model.pkl')
 
 def predict_price(size, bedrooms, age):
-    model = joblib.load('house_price_model.pkl')
-    return model.predict(np.array([[size, bedrooms, age]]))[0]
+    # Prepare the input as a 2D array for the model
+    input_data = [[size, bedrooms, age]]
+    # Predict the price using the model
+    predicted_price = model.predict(input_data)[0]
+    return predicted_price
+
+def plot_actual_vs_predicted(X_test, y_test):
+    predictions = model.predict(X_test)
+
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    plt.scatter(range(len(y_test)), y_test, color='blue', label='Actual Price')
+    plt.scatter(range(len(predictions)), predictions, color='red', label='Predicted Price')
+    plt.xlabel('House Index')
+    plt.ylabel('Price')
+    plt.legend()
+    plt.title('Actual vs. Predicted House Prices')
+
+    # Save the plot to a BytesIO object and convert to base64
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+    plt.close()
+    return plot_url
